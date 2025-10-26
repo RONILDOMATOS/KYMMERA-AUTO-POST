@@ -20,7 +20,7 @@ const CONFIG = {
     accessToken: 'EAA7sfnzxQ6QBPr7KMtllaq67HwuXOTeB7ovoRXdgPUYLgDT4bkhVmCDnyLamjq94IaabklxRaagerYeSYLM6xUYZCRVLAyitclNMSMM5aPFT7dKiBgzGDZAa5jUaaYkkZCGfxfyoIThmysjDKYPp7NmZCg2cz7U4Biohw4NUeWAN2ybLS3QeBawQo2CWKBmwSe0ZD'
   },
   horarios: ['09:00', '14:00', '19:00'], // Horário de Brasília
-  mongodb: process.env.MONGODB_URI || 'mongodb://localhost:27017/nuvemshop_automation'
+  mongodb: process.env.MONGO_URL || 'mongodb://localhost:27017/nuvemshop_automation'
 };
 
 // ============ MONGODB SCHEMAS ============
@@ -291,6 +291,7 @@ app.listen(PORT, () => {
   console.log(`   - Teste: http://localhost:${PORT}/test-post\n`);
 
 });
+
 
 
 
