@@ -79,15 +79,15 @@ app.get('/callback', async (req, res) => {
     });
 
     // Salva no banco
-    await Store.findOneAndUpdate(
-      { storeId: user_id },
-      {
-        storeId: user_id,
-        storeName: storeResponse.data.name,
-        accessToken: access_token
-      },
-      { upsert: true }
-    );
+   await Store.findOneAndUpdate(
+  { storeId: user_id },
+  {
+    storeId: user_id,
+    storeName: storeResponse.data.name.pt || storeResponse.data.name,  // ← CORRIGIDO!
+    accessToken: access_token
+  },
+  { upsert: true }
+);
 
     res.send(`
       <h1>✅ Instalação concluída com sucesso!</h1>
@@ -291,6 +291,7 @@ app.listen(PORT, () => {
   console.log(`   - Teste: http://localhost:${PORT}/test-post\n`);
 
 });
+
 
 
 
