@@ -11,7 +11,7 @@ const CONFIG = {
   nuvemshop: {
     appId: '22433',
     appSecret: 'c389978997d171e9982822f6096e15c9a44e70e4d175c152',
-    redirectUri: 'kymmera-auto-post-production.up.railway.app'
+    redirectUri: 'https://kymmera-auto-post-production.up.railway.app/callback'
   },
   facebook: {
     appId: '4200677680169892',
@@ -291,5 +291,6 @@ app.listen(PORT, () => {
   console.log(`   - Teste: http://localhost:${PORT}/test-post\n`);
 
 });
+
 
 
