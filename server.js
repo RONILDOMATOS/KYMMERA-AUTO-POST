@@ -9,8 +9,8 @@ app.use(express.json());
 // ============ CONFIGURAÇÕES ============
 const CONFIG = {
   nuvemshop: {
-    appId: '22395',
-    appSecret: 'd92860c7e62e4c3b129e32eac27d7844f4107eb7e787f553',
+    appId: '22433',
+    appSecret: 'c389978997d171e9982822f6096e15c9a44e70e4d175c152',
     redirectUri: 'https://kymmera-auto-post-v2.onrender.com/callback'
   },
   facebook: {
@@ -291,3 +291,4 @@ app.listen(PORT, () => {
   console.log(`   - Teste: http://localhost:${PORT}/test-post\n`);
 
 });
+
