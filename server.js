@@ -17,7 +17,7 @@ const CONFIG = {
     appId: '4200677680169892',
     appSecret: 'c405edcf2cf43f9bb70fe992f14c262c',
     pageId: '105809162380078',
-    accessToken: 'EAA7sfnzxQ6QBPuLP7pBzg75e67zxSkLiBsOklZCpznDpFketMxVM4tJcikpHvgFMmMZBfOLATIJKhMIVruLRSzMQiqgIjhcLZBiyEawZAKDI4RJJ4zJNS28tJsis3TQZByEyHOFKi63RyI0SL4goKIyn9mvDZAZANnuWdEZAdFqEDmywNEyRPXPfe6Aq7jSJVAZDZD'
+    accessToken: 'EAA7sfnzxQ6QBP5I04e3LeSyAQxmnSKjGKM7ZB4y7nsn4gWydvBN8hZAz71SWsS7RTbRQzNGuwo9MgFMqi0ZBgUIedInMp2QdJKF25WYyNoTJ1YgQZBVQtDKw0fRF2KbBvjX7CyZBItgP0NmvwCONgN97NjWnPnsIgSK8VJ3DUpgAf4MxZBtQJBu7PzFCW0LQlS7WCMIIYZD'
   },
   horarios: ['09:00', '14:00', '19:00'], // Horário de Brasília
   mongodb: process.env.MONGO_URL || 'mongodb://localhost:27017/nuvemshop_automation'
@@ -291,6 +291,7 @@ app.listen(PORT, () => {
   console.log(`   - Teste: http://localhost:${PORT}/test-post\n`);
 
 });
+
 
 
 
