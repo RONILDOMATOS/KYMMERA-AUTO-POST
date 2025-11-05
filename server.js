@@ -134,11 +134,13 @@ async function getRandomProducts(storeId, accessToken, count = 1) {
   }
 }
 
-// ============ POSTAR NO FACEBOOK ============
+// ============ POSTAR NO FACEBOOK COM MÚLTIPLAS IMAGENS ============
 async function postToFacebook(product) {
   try {
     const price = product.variants[0]?.price || 'Consulte';
-    const image = product.images[0]?.src || '';
+    
+    // Pega até 8 imagens do produto
+    const images = product.images.slice(0, 8);
     
     const message = `🔥 ${product.name.pt || product.name}
 
@@ -150,23 +152,72 @@ ${product.description?.pt?.substring(0, 200) || product.description?.substring(0
 
 #kymmera #moda #estilo #novidade`;
 
-    // Posta a foto com legenda
-    const response = await axios.post(
-      `https://graph.facebook.com/v18.0/${CONFIG.facebook.pageId}/photos`,
-      {
-        url: image,
-        caption: message,
-        access_token: CONFIG.facebook.accessToken
-      }
-    );
+    let response;
 
-    console.log('✅ Postado no Facebook:', product.name.pt || product.name);
-    
+    // Se tiver apenas 1 imagem, usa o método simples
+    if (images.length === 1) {
+      response = await axios.post(
+        `https://graph.facebook.com/v18.0/${CONFIG.facebook.pageId}/photos`,
+        {
+          url: images[0].src,
+          caption: message,
+          access_token: CONFIG.facebook.accessToken
+        }
+      );
+      console.log(`✅ Postado no Facebook (1 imagem): ${product.name.pt || product.name}`);
+    } 
+    // Se tiver múltiplas imagens, cria um post com carrossel
+    else {
+      console.log(`📸 Fazendo upload de ${images.length} imagens...`);
+      
+      // Passo 1: Fazer upload de cada imagem e pegar os IDs
+      const uploadedPhotoIds = [];
+      
+      for (let i = 0; i < images.length; i++) {
+        try {
+          const uploadResponse = await axios.post(
+            `https://graph.facebook.com/v18.0/${CONFIG.facebook.pageId}/photos`,
+            {
+              url: images[i].src,
+              published: false, // Não publica ainda
+              access_token: CONFIG.facebook.accessToken
+            }
+          );
+          
+          uploadedPhotoIds.push({ media_fbid: uploadResponse.data.id });
+          console.log(`   ✓ Imagem ${i + 1}/${images.length} enviada`);
+          
+          // Pequeno delay para evitar rate limit
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+        } catch (uploadError) {
+          console.error(`   ✗ Erro ao enviar imagem ${i + 1}:`, uploadError.message);
+        }
+      }
+
+      // Se conseguiu fazer upload de pelo menos 1 imagem
+      if (uploadedPhotoIds.length > 0) {
+        // Passo 2: Criar o post com todas as imagens
+        response = await axios.post(
+          `https://graph.facebook.com/v18.0/${CONFIG.facebook.pageId}/feed`,
+          {
+            message: message,
+            attached_media: uploadedPhotoIds,
+            access_token: CONFIG.facebook.accessToken
+          }
+        );
+        
+        console.log(`✅ Postado no Facebook (${uploadedPhotoIds.length} imagens): ${product.name.pt || product.name}`);
+      } else {
+        throw new Error('Falha ao fazer upload de todas as imagens');
+      }
+    }
+
     // Salva log
     await PostLog.create({
       productId: product.id,
       productName: product.name.pt || product.name,
-      facebookPostId: response.data.id,
+      facebookPostId: response.data.id || response.data.post_id,
       success: true
     });
 
@@ -186,7 +237,6 @@ ${product.description?.pt?.substring(0, 200) || product.description?.substring(0
     throw error;
   }
 }
-
 // ============ FUNÇÃO PRINCIPAL - EXECUTAR POSTAGEM ============
 async function executarPostagem() {
   console.log(`\n🚀 [${new Date().toLocaleString('pt-BR')}] Iniciando postagem automática...`);
@@ -291,6 +341,7 @@ app.listen(PORT, () => {
   console.log(`   - Teste: http://localhost:${PORT}/test-post\n`);
 
 });
+
 
 
 
